@@ -1,0 +1,7 @@
+[package]
+name = "cbt"
+version = "0.1.0"
+authors = ["David Nies <david.nies@posteo.de>"]
+
+[dependencies]
+clipboard = "0.4"
