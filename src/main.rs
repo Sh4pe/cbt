@@ -1,10 +1,11 @@
 extern crate clipboard;
 
-use std::process::{Command, Stdio, exit};
+use std::process::{Command, Stdio, Output, exit};
 use std::thread;
 use std::time;
 use std::io::{Write};
 use std::env;
+use std::fmt;
 
 use clipboard::ClipboardProvider;
 use clipboard::ClipboardContext;
@@ -18,12 +19,13 @@ impl ShellTransformation {
         ShellTransformation { command }
     }
 
-    fn apply(&self, s: &String) -> String {
+    fn get_filter_output(&self, s: &String) -> std::io::Result<Output> {
         let mut process = Command::new("sh")
             .arg("-c")
             .arg(self.command.clone())
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
             .spawn()
             .unwrap();
 
@@ -31,8 +33,23 @@ impl ShellTransformation {
             let stdin = process.stdin.as_mut().expect("unable to get stdin");
             stdin.write(s.as_bytes()).unwrap();
         }
-        let output = process.wait_with_output().expect("unable to get output");
+        process.wait_with_output()
+    }
+
+    fn is_valid_filter(&self) -> bool {
+        let output = self.get_filter_output(&String::new()).unwrap();
+        output.status.success()
+    }
+
+    fn apply(&self, s: &String) -> String {
+        let output = self.get_filter_output(s).expect("unable to get output");
         String::from_utf8(output.stdout).unwrap()
+    }
+}
+
+impl fmt::Display for ShellTransformation {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.command)
     }
 }
 
@@ -73,6 +90,10 @@ fn main() {
         .skip(1)
         .map(ShellTransformation::new)
         .collect();
+    if let Some(transformation) = transformations.iter().find(|t| !t.is_valid_filter()) {
+        println!("Error: '{}' does not appear to be a valid filter", transformation);
+        exit(1);
+    }
     if let Err(err) = poll_and_transform(300, transformations) {
         println!("Error: {}", err);
         exit(1);
