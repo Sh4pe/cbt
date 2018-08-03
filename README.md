@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/Sh4pe/cbt.svg?branch=master)](https://travis-ci.org/Sh4pe/cbt)
+[![Build Status](https://travis-ci.org/Sh4pe/cbt.svg?branch=master)](https://travis-ci.org/Sh4pe/cbt) 
+[![crates.io](https://img.shields.io/badge/crates.io-v0.1.0-orange.svg)](https://crates.io/crates/cbt)
 
 # `cbt` - clipboard transformations
 
