@@ -1,6 +1,9 @@
 [package]
 name = "cbt"
 version = "0.1.0"
+description = "Command-line tool that transforms new clipboard content with a series of user-defined shell filters and prints the result."
+license = "MIT"
+repository = "https://github.com/Sh4pe/cbt"
 authors = ["David Nies <david.nies@posteo.de>"]
 
 [dependencies]
