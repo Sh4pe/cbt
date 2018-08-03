@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Sh4pe/cbt.svg?branch=master)](https://travis-ci.org/Sh4pe/cbt)
+
 # `cbt` - clipboard transformations
 
 The **c**lip**b**oard **t**ransformer retrieves new values from the system clipboard and runs them through a series of user-defined transformations. 
